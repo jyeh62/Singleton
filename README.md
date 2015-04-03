@@ -1,4 +1,71 @@
-singleton ë§Œë“œëŠ” ë°©ë²•<br>
-1. ê°œë…ì ì¸ ë°©ë²•<br>
-2. double check<br>
-3. Initialization on Demand Holder<br>
+singleton 
+1. °³³äÀûÀÎ ¹æ¹ı
+public class Singleton{
+    private static Singleton mInstance;
+
+    private Singleton(){
+    }
+
+    public static Singleton getInstance(){
+        if(mInstance == null){
+            mInstance = new Singleton();
+        }
+        return mInstance;
+    }
+}
+¸ÖÆ¼ ¾²·¹µå È¯°æ¿¡¼­ Ãë¾àÇÔ
+
+2. double checked locked
+¸ÖÆ¼ ¾²·¹µå È¯°æÀ» °í·ÁÇØ µ¿±âÈ­(synchronized) ºí·° »ç¿ë, µ¿±âÈ­ ºí·° ¾È¿¡¼­ instance »ı¼º Áß¿¡ ¸Ş¸ğ¸® ÇÒ´ç¸¦ ¹Ş¾Æ mInstance´Â ´õÀÌ»ó nullÀÌ ¾Æ´Ï°Ô µÈ´Ù. ±×¶§ ´Ù¸¥ ¾²·¹µå°¡ getInstance ¸¦ È£Ãâ ÇÒ °æ¿ì..nullµµ ¾Æ´Ï¸é¼­ Á¤»óÀûÀÌÁö ¾Ê´Â instance°¡ ¸®ÅÏµÈ´Ù.
+public class Singleton{
+    private static Singleton mInstance;
+
+    private Singleton(){
+    }
+
+    public static Singleton getInstance(){
+        if(mInstance == null){
+            synchronized(this) {
+                if(mInstance == null){
+                    mInstance = new Singleton();
+                }
+            }
+        }
+        return mInstance;
+    }
+}
+
+3. Initialization on Demand Holder
+getInstance¸¦ ÃÖÃÊ È£Ãâ ÇÏ´Â ¼ø°£¿¡¸¸ ÃÊ±âÈ­(new Singleton)ÀÌ ½ÇÇàµÊ. µû¶ó¼­ µ¿½Ã¿¡ getInstance¸¦ È£ÃâÇØµµ ÇÑ°³ÀÇ instance°¡ À¯ÁöµÊ 
+
+public final class Singleton{
+    private static final class SingletonHolder{
+        static final Singleton INSTANCE = new Singleton();
+    }
+
+    private Singeton(){
+    }
+
+    public static Singleton getInstance(){
+        return SingletonHolder.INSTANCE;
+    }
+}
+
+4. simple
+3¹ø°ú À¯»çÇÑ ÄÁ¼Á. static ºí·°Àº ÇÑ¹ø¸¸ ½ÇÇàµÇ±â ¶§¹®¿¡ ¸ÖÆ¼ ¾²·¹µå¿¡¼­µµ OK. ´Ù¸¸ Æ¯Á¤ °æ¿ì ¹®Á¦°¡ ¹ß»ıµÇ¾ú´Ù°í º¸°íµÊ(»ı¼ºÀÚÀÇ ÀÏºÎ ÄÚµåµéÀÌ Ç×»ó ½ÇÇàµÇÁö ¾Ê´Â ¹®Á¦..)
+
+public class Singleton {   
+   private static final Singleton _theInstance = new Singleton();
+ 
+   private Singleton() {
+   }
+   
+   public static Singleton getInstance() {
+      return _theInstance;
+   }
+  }
+
+
+  °á·Ğ..
+  1. 3¹øÂ° ¹æ¹ıÀÌ ÇöÀç±îÁö´Â °¡Àå ¿Ïº®ÇÏ´Ù°í ¾Ë·ÁÁ® ÀÖÀ¸¸ç  ¼º´Éµµ ÁÁÀ½. ´Ù¸¸ ÀÚ¹Ù¿¡¼­¸¸ º¸ÀåµÇ´Â ³»¿ëÀÓ.
+  2. singleton ¼º´É(instance °¹¼ö º¸Àå, ¼Óµµ)¿¡ ´ëÇØ¼­ Å×½ºÆ® ÇÏ´Â ¹æ¹ıÀº..¹»±î..
