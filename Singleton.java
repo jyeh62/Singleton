@@ -11,11 +11,7 @@ public class Singleton {
     }
 
     private Singleton(){
-<<<<<<< HEAD
         System.out.println("Singleton create");
-=======
-        //생성자..
->>>>>>> c082df309f7f9f4d95f1d2bc7d9fc6484e65cf6b
     }
 
     public static Singleton getInstance(){
